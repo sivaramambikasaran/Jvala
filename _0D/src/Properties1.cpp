@@ -9,6 +9,8 @@
 
 #include"Jvala_0D.HPP"
 
+std::string mechanismfile,thermofile,transportfile;
+
 
 void removeColumn(Eigen::MatrixXd& matrix, unsigned int colToRemove)
 {
@@ -236,7 +238,7 @@ std::cout<<"\nMWs\n";
 void Properties::get_Cpcoefs()
 {
 	std::ifstream fin;
-	fin.open("./inputFiles/nalkanes.thermo",std::ios::in);
+	fin.open(thermofile.c_str(),std::ios::in);
 
 	std::string temp;
 	std::getline(fin,temp);
@@ -319,8 +321,20 @@ int Properties::get_Index(std::string s,std::vector<std::string> Sp)
 	return -1;
 }
 
-Properties::Properties(double To, Eigen::VectorXd Xi,double Q, double m) //somewhat a constructor :/
+Properties::Properties() //somewhat a constructor :/
 {
+	std::ifstream fin;
+	fin.open("./inputFiles/allInput.txt",std::ios::in);
+	std::string temp;
+	std::getline(fin,temp);
+	std::getline(fin,mechanismfile);
+	std::getline(fin,temp);
+	std::getline(fin,temp);
+	std::getline(fin,thermofile);
+	std::getline(fin,temp);
+	std::getline(fin,temp);
+	std::getline(fin,transportfile);f
+/*
 	this->To=To;
 	this->XInitial=Xi;
 	this->Qdot=Q;
@@ -338,7 +352,8 @@ Properties::Properties(double To, Eigen::VectorXd Xi,double Q, double m) //somew
 	this->Ar=Eigen::VectorXd::Zero(L);
 	this->Ear=Eigen::VectorXd::Zero(L);
 	this->nr=Eigen::VectorXd::Zero(L);
-	get_Species(); //gets L,N,Species
+*/
+	get_Species(); //gets L,N,A,Species
 	resize_vectors();
 	get_rpcoefs(); //reactant_coefs,product_coefs,A,n,Ea,Press_coefs,M_index,Mxx
 	get_Cpcoefs();
@@ -436,7 +451,7 @@ std::cout<<"in get_species\n";
 	A=0;
 
 	std::ifstream fin;
-	fin.open("./inputFiles/33_species_heptane.mech",std::ios::in);
+	fin.open(mechanismfile.c_str(),std::ios::in);
 	std::regex Spc("[A-Z][A-Za-z0-9\\-]*");
 	std::regex coef("[0-9]\\.*");
 	std::regex line("[L|l]et");
@@ -592,7 +607,7 @@ void Properties::get_rpcoefs()
 {
 std::cout<<"in get rpcoefs\n";
 	std::ifstream fin;
-	fin.open("./inputFiles/33_species_heptane.mech",std::ios::in);
+	fin.open(mechanismfile.c_str(),std::ios::in);
 	std::regex Spc("[A-Z][A-Za-z0-9\\-]*");
 	std::regex coef("[0-9]*");
 	std::regex Mspc("\\[[A-Z][A-Za-z0-9\\-]*\\]");
@@ -789,7 +804,7 @@ std::cout<<"okay\n";
 	Mxx=Eigen::MatrixXd::Zero(M_index.size(),N); 
 
 	std::ifstream fin;
-	fin.open("./inputFiles/33_species_heptane.mech",std::ios::in);
+	fin.open(mechanismfile.c_str(),std::ios::in);
 	std::regex Spc("[A-Z][A-Za-z0-9\\-]*");
 	std::regex coef("[0-9\\.]*");
 	std::regex Mspc("\\[[A-Z][A-Za-z0-9\\-]*\\]");

@@ -14,7 +14,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(KERNEL) $(DIM) $< -o $@
 
 clean:
-	rm -rf *.out ./examples/*.o ./src/*.o ./exec/*
+	rm -rf *.out ./examples/*.o ./src/*.o ./exec/* ./Anukalana-master/src/*.o
 
 tar:
 	tar -zcvf Anukalana.tar.gz ./makefile.mk ./exec ./src ./header ./examples ./README.md ./LICENSE.md

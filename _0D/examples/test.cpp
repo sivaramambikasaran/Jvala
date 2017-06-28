@@ -14,24 +14,31 @@ long unsigned nTimeSteps;
 double deltat;
 int No	=	35;
 
-class myIntegrator: public Integrator,public Isobaric
+
+
+class myIntegrator: public Integrator
 {
 	protected:
+	Isobaric Problem;
+
 	Eigen::VectorXd function(double t, Eigen::VectorXd y)
 	{
 		Eigen::VectorXd temp(y.rows());
 		for(unsigned i=0;i<N;i++)
 		{
-			temp(i)=XiODE(y(N),y,t,i);
+			temp(i)=Problem.XiODE(y(N),y,t,i);
 		}
-		temp(N)	=TempODE(y(N),y,t); 
+		temp(N)	=Problem.TempODE(y(N),y,t); 
 		
 		return temp;
 	};
 
 
 	public:
-	myIntegrator(Eigen::VectorXd yInitial, double tInit, int nTimeSteps, double deltat,double To, Eigen::VectorXd Xi,double Q, double m) : Integrator(yInitial, tInit, nTimeSteps, deltat),Isobaric(To,Xi,Q,m){};
+	myIntegrator(Eigen::VectorXd yInitial, double tInit, int nTimeSteps, double deltat,Isobaric Prob) : Integrator(yInitial, tInit, nTimeSteps, deltat)
+	{
+		this->Problem=Prob;
+	};
 	~myIntegrator(){};
 };
 
@@ -89,12 +96,28 @@ int main(int argc, char* argv[])
 	for(unsigned i=0;i<34;++i) Xi(i)=1.0; //random
 	double Q=0.0;//random
 	double m=0.0;	//random
-	Eigen::VectorXd yInitial(No);
-	yInitial = Xi;
-	yInitial.resize(No);
-	yInitial(No-1)=To;
 
-	myIntegrator A(yInitial,tInit, nTimeSteps, deltat, To,Xi,Q,m);
+	Isobaric P;
+	std::string temp;
+	Eigen::VectorXd yInitial(P.N);
+	yInitial=Eigen::VectorXd::Zero(P.N);
+	std::ifstream fin;
+	fin.open("./inputFiles/allInput.txt",std::ios::in);
+	for(unsigned i=0;i<10;++i)
+		std::getline(fin,temp);	
+
+	while(fin)
+	{
+		fin>>temp;
+		int i=P.get_Index(temp,P.Species);
+		fin>>temp;
+		if(i==-1) continue;
+		yInitial(i)=std::atof(temp.c_str());
+	}
+	myIntegrator(yInitial,tInit,nTimeSteps,deltat,P);
+	
+
+/*
 	Eigen::VectorXd Enth,Omega;
 	Enth=Eigen::VectorXd::Zero(A.N);
 	Omega=Eigen::VectorXd::Zero(A.N);
@@ -104,6 +127,7 @@ int main(int argc, char* argv[])
 	{
 		std::cout<<A.Species[j]<<"\nEn= "<<Enth(j)<<"\tOm= "<<Omega(j)<<"\n";
 	}
+*/
 	//air=80N2 and 20O2. Fuel=
 /*
 	unsigned i=6;

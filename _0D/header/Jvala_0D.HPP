@@ -20,7 +20,7 @@ class Properties
 
 	//user input
 	double m,Qdot,To; //m-mass of reaction mixture(constant)	Qdot-Rate of heat loss from reactor	To-Initial temperature
-	Eigen::VectorXd XInitial;// 	Xinitial-initial conc of species					(should i calc Xinitial from phi?)
+	Eigen::VectorXd XInitial;// 	Xinitial-initial conc of species	(should i calc Xinitial from phi?)
 
 	//from files
 	unsigned L,N,A; //L-total no. of rxns		N-total no. of species(including other)		A-no. of atoms involved 
@@ -41,7 +41,7 @@ class Properties
 */	
 	
 	//CONSTRUCTOR
-	Properties(double To, Eigen::VectorXd Xi,double Q, double m);	//works
+	Properties();	//works
 
 	//functions 
 	void resize_vectors();						//ok
@@ -81,7 +81,7 @@ class Isochoric : public Properties
 {
 	public:
 	double V;
-	Isochoric(double To, Eigen::VectorXd Xi,double Q, double m, double V):Properties(To,Xi,Q,m)		
+	Isochoric(double V):Properties(To,Xi,Q,m)		
 	{
 		this->V=V;
 	};

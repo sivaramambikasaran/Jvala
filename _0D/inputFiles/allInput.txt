@@ -1,0 +1,11 @@
+The path to the mechanism(.mech) file:
+./inputFiles/33_species_heptane.mech
+
+The path to the thermo(.thermo) file:
+./inputFiles/nalkanes.thermo
+
+the path to the transport(.trans) file:
+./inputFiles/nalkanes.trans
+
+Add "Species<space>initial concentration" below (only for species with non zero initial concentration)
+
